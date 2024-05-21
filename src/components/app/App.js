@@ -1,4 +1,5 @@
 import { Component } from "react";
+import PropTypes from "prop-types";
 
 import ErrorBoundary from "../errorBoundary/ErrorBoundary";
 import AppHeader from "../appHeader/AppHeader";
@@ -54,6 +55,10 @@ class App extends Component {
         )
     }
     
+}
+
+CharList.protTypes = {
+    onCharSelected: PropTypes.func
 }
 
 export default App;
