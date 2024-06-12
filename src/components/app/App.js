@@ -1,4 +1,4 @@
-import { Component } from "react";
+import { useState } from "react";
 import PropTypes from "prop-types";
 
 import ErrorBoundary from "../errorBoundary/ErrorBoundary";
@@ -9,56 +9,44 @@ import CharInfo from "../charInfo/CharInfo";
 
 import decoration from '../../resources/img/vision.png';
 
-class App extends Component {
+const App = () => {
     
-    state = {
-        selectedChar: null,
-        showRandomChar: true
+    const [selectedChar, setChar] = useState(null);
+    const [showRandomChar, setRandomChar] = useState(true);
+    
+    const onCharSelected = (id) => {
+        setChar(id);
     }
-    
-    onCharSelected = (id) => {
-        this.setState({
-            selectedChar: id
-        })
+     
+    const toggleRandomChar = () => {
+        setRandomChar(!showRandomChar)
     }
 
-    toggleRandomChar = () => {
-        this.setState((state) => {
-            return {
-                showRandomChar: !state.showRandomChar
-            }
-        })
-    }
-
-    render() {
-        
-        return (
-            <div className="app">
-                <AppHeader/>
-                <main>
+    return (
+        <div className="app">
+            <AppHeader/>
+            <main>
+                <ErrorBoundary>
+                    {showRandomChar ? <RandomChar/> : null}
+                </ErrorBoundary>
+                {showRandomChar ? <button style={{marginTop: '15px'}} className="button button__main" onClick={toggleRandomChar}><div className="inner">Hide random character</div></button> :<button style={{marginTop: '15px'}} className="button button__main" onClick={toggleRandomChar}><div className="inner">Show random character</div></button>}
+                
+                <div className="char__content">
                     <ErrorBoundary>
-                        {this.state.showRandomChar ? <RandomChar/> : null}
+                        <CharList onCharSelected={onCharSelected}/>
                     </ErrorBoundary>
-                    {this.state.showRandomChar ? <button style={{marginTop: '15px'}} className="button button__main" onClick={this.toggleRandomChar}><div className="inner">Hide random character</div></button> :<button style={{marginTop: '15px'}} className="button button__main" onClick={this.toggleRandomChar}><div className="inner">Show random character</div></button>}
-                    
-                    <div className="char__content">
-                        <ErrorBoundary>
-                            <CharList onCharSelected={this.onCharSelected}/>
-                        </ErrorBoundary>
-                        <ErrorBoundary>
-                            <CharInfo charId={this.state.selectedChar}/>
-                        </ErrorBoundary>
-                    </div>
-                    <img className="bg-decoration" src={decoration} alt="vision"/>
-                </main>
-            </div>
-        )
-    }
-    
+                    <ErrorBoundary>
+                        <CharInfo charId={selectedChar}/>
+                    </ErrorBoundary>
+                </div>
+                <img className="bg-decoration" src={decoration} alt="vision"/>
+            </main>
+        </div>
+    )
 }
 
 CharList.protTypes = {
-    onCharSelected: PropTypes.func
+    onCharSelected: PropTypes.func.isRequired
 }
 
 export default App;
