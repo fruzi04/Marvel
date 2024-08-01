@@ -8,19 +8,31 @@ import ErrorMessage from '../errorMessage/ErrorMessage';
 
 import './charSearchForm.scss';
 
+const setDisabled = (process) => {
+    switch (process) {
+        case 'confirmed':
+            return {disabled: 'false'};
+            break;
+        case 'loading':
+            return {disabled: 'true'};
+            break;
+    }
+}
+
 const CharSearchForm = () => {
     const [char, setChar] = useState(null);
-    const {loading, error, getCharacterByName, clearError} = useMarvelService();
+    const {error, getCharacterByName, clearError, process, setProcess} = useMarvelService();
 
     const onCharLoaded = (char) => {
-        setChar(char);
+        setChar(char)
     }
 
     const updateChar = (name) => {
         clearError();
 
         getCharacterByName(name)
-            .then(onCharLoaded);
+            .then(onCharLoaded)
+            .then(() => setProcess('confirmed'))
     }
 
     const errorMessage = error ? <div className="char__search-critical-error"><ErrorMessage /></div> : null;
@@ -59,7 +71,7 @@ const CharSearchForm = () => {
                         <button 
                             type='submit' 
                             className="button button__main"
-                            disabled={loading}>
+                            disabled={setDisabled(process)}>
                             <div className="inner">find</div>
                         </button>
                     </div>
