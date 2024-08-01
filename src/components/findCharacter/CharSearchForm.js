@@ -8,17 +8,6 @@ import ErrorMessage from '../errorMessage/ErrorMessage';
 
 import './charSearchForm.scss';
 
-const setDisabled = (process) => {
-    switch (process) {
-        case 'confirmed':
-            return {disabled: 'false'};
-            break;
-        case 'loading':
-            return {disabled: 'true'};
-            break;
-    }
-}
-
 const CharSearchForm = () => {
     const [char, setChar] = useState(null);
     const {error, getCharacterByName, clearError, process, setProcess} = useMarvelService();
@@ -71,7 +60,7 @@ const CharSearchForm = () => {
                         <button 
                             type='submit' 
                             className="button button__main"
-                            disabled={setDisabled(process)}>
+                            disabled={process === 'loading'}>
                             <div className="inner">find</div>
                         </button>
                     </div>
